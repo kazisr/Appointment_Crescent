@@ -16,6 +16,54 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.ZoneId
+import java.time.format.DateTimeParseException
+import java.util.Locale
+import org.json.JSONException
+
+fun prettyJson(raw: String): String {
+    return try {
+        val json = JSONObject(raw)
+        json.toString(4)   // indent = 4 spaces
+    } catch (e: JSONException) {
+        raw  // fallback if malformed JSON
+    }
+}
+fun formatTimestampHuman(ts: String): String {
+    if (ts.isBlank()) return "Unknown time"
+    // Try common ISO formats, fall back to the raw string
+    val candidates = listOf(
+        DateTimeFormatter.ISO_ZONED_DATE_TIME,
+        DateTimeFormatter.ISO_OFFSET_DATE_TIME,
+        DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+        DateTimeFormatter.ISO_LOCAL_DATE
+    )
+    for (fmt in candidates) {
+        try {
+            val parsed = when (fmt) {
+                DateTimeFormatter.ISO_LOCAL_DATE -> LocalDateTime.parse(ts + "T00:00:00")
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME -> LocalDateTime.parse(ts, fmt)
+                else -> ZonedDateTime.parse(ts, fmt).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+            }
+            // e.g. "04 Dec 2025, 09:12 AM"
+            val pretty = parsed.format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.getDefault()))
+            return pretty
+        } catch (_: DateTimeParseException) {
+            // try next
+        } catch (_: Exception) {
+            // try next
+        }
+    }
+    // final fallback: try to substr or return raw
+    return try {
+        // truncate long strings sensibly
+        if (ts.length > 30) ts.substring(0, 30) + "…" else ts
+    } catch (_: Exception) { ts }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen() {
@@ -106,7 +154,8 @@ fun HistoryScreen() {
             title = { Text("Details") },
             text = {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Text("Timestamp: ${it.timestamp}", style = MaterialTheme.typography.bodySmall)
+                    val prettyTime = formatTimestampHuman(it.timestamp)
+                    Text("Time: $prettyTime", style = MaterialTheme.typography.bodySmall)
                     Spacer(Modifier.height(6.dp))
                     Text("Status: ${if (it.statusCodeOrError.equals("ERROR", true)) "Error" else it.statusCodeOrError}", style = MaterialTheme.typography.bodySmall)
                     Spacer(Modifier.height(8.dp))
@@ -141,7 +190,12 @@ fun HistoryScreen() {
 
                     Text("Raw payload:", style = MaterialTheme.typography.titleSmall)
                     Spacer(Modifier.height(6.dp))
-                    Text(it.rawPayload, style = MaterialTheme.typography.bodySmall)
+                    val prettyPayload = prettyJson(it.rawPayload)
+
+                    Text(
+                        prettyPayload,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         )

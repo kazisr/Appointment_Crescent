@@ -8,7 +8,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MedicalInformation
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -117,21 +120,21 @@ class MainActivity : ComponentActivity() {
             NavigationBarItem(
                 selected = currentRoute == "send",
                 onClick = { navController.navigate("send") { launchSingleTop = true; restoreState = true } },
-                icon = { androidx.compose.material3.Icon(Icons.Default.Send, contentDescription = "Send") },
+                icon = { androidx.compose.material3.Icon(Icons.Default.MedicalInformation, contentDescription = "Send") },
                 label = { androidx.compose.material3.Text("Appointment Info") }
             )
 
-            NavigationBarItem(
-                selected = currentRoute == "schedule",
-                onClick = { navController.navigate("schedule") { launchSingleTop = true; restoreState = true } },
-                icon = { androidx.compose.material3.Icon(Icons.Default.DateRange, contentDescription = "Schedule") },
-                label = { androidx.compose.material3.Text("Schedule") }
-            )
+//            NavigationBarItem(
+//                selected = currentRoute == "schedule",
+//                onClick = { navController.navigate("schedule") { launchSingleTop = true; restoreState = true } },
+//                icon = { androidx.compose.material3.Icon(Icons.Default.DateRange, contentDescription = "Schedule") },
+//                label = { androidx.compose.material3.Text("Schedule") }
+//            )
 
             NavigationBarItem(
                 selected = currentRoute == "history",
                 onClick = { navController.navigate("history") { launchSingleTop = true; restoreState = true } },
-                icon = { androidx.compose.material3.Icon(Icons.Default.List, contentDescription = "History") },
+                icon = { androidx.compose.material3.Icon(Icons.Default.History, contentDescription = "History") },
                 label = { androidx.compose.material3.Text("History") }
             )
         }

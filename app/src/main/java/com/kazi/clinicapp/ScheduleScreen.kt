@@ -5,13 +5,19 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
@@ -204,10 +211,12 @@ fun ScheduleScreen(navController: NavHostController) {
                             }
                         }
                     ) {
-                        Text("Schedule Hit")
+                        Icon(Icons.Default.Start, contentDescription = "Start")
+                        Spacer(Modifier.width(8.dp))
+                        Text("Start Now")
                     }
 
-                    Button(
+                    OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = {
                             cancelOneTimeSchedule(context)
@@ -219,6 +228,8 @@ fun ScheduleScreen(navController: NavHostController) {
                             statusText = "Not scheduled"
                         }
                     ) {
+                        Icon(Icons.Default.Cancel, contentDescription = "Cancel")
+                        Spacer(Modifier.width(8.dp))
                         Text("Cancel")
                     }
                 }
@@ -240,20 +251,67 @@ fun ScheduleScreen(navController: NavHostController) {
 
                 Spacer(Modifier.height(12.dp))
 
-                remainingSeconds?.let { sec ->
+                // --- Animated Countdown Block ---
+                if (remainingSeconds != null && remainingSeconds!! > 0) {
+
+                    // Time components
+                    val sec = remainingSeconds!!
                     val h = sec / 3600
                     val m = (sec % 3600) / 60
                     val s = sec % 60
-                    Text(
-                        "Time Left: %02d:%02d:%02d".format(h, m, s),
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = countdownColor,
+
+                    // Animated pulse
+                    val infiniteTransition = rememberInfiniteTransition()
+                    val scale by infiniteTransition.animateFloat(
+                        initialValue = 0.97f,
+                        targetValue = 1.05f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+                            repeatMode = RepeatMode.Reverse
+                        )
+                    )
+
+                    // Optional color fade when < 10 seconds
+                    val urgentColor = MaterialTheme.colorScheme.error
+                    val normalColor = MaterialTheme.colorScheme.primary
+                    val countdownColor = if (sec < 10) urgentColor else normalColor
+
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .graphicsLayer { scaleX = scale; scaleY = scale }
-                            .wrapContentWidth(Alignment.CenterHorizontally)
+                            .padding(top = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "%02d:%02d:%02d".format(h, m, s),
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            color = countdownColor,
+                            modifier = Modifier.graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
+                            "Time Left",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                } else {
+                    Text(
+                        "No countdown",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium
                     )
-                } ?: Text("No countdown")
+                }
             }
         }
     }

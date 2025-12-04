@@ -42,6 +42,10 @@ android {
 }
 
 dependencies {
+
+    implementation ("androidx.compose:compose-bom:2024.07.00") // pick a BOM version you use
+    implementation ("androidx.compose.material3:material3")
+    implementation ("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
