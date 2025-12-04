@@ -200,34 +200,34 @@ fun SendScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                // Visit type
-                OutlinedTextField(
-                    value = visitType,
-                    onValueChange = { visitType = it },
-                    label = { Text("Visit Type (Optional)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+//                // Visit type
+//                OutlinedTextField(
+//                    value = visitType,
+//                    onValueChange = { visitType = it },
+//                    label = { Text("Visit Type (Optional)") },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
 
-                Spacer(Modifier.height(16.dp))
-
-                // PAYLOAD PREVIEW
-                Text("Payload Preview", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(6.dp))
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 80.dp, max = 220.dp),
-                    elevation = CardDefaults.cardElevation(3.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(previewJson)
-                    }
-                }
+//                Spacer(Modifier.height(16.dp))
+//
+//                // PAYLOAD PREVIEW
+//                Text("Payload Preview", style = MaterialTheme.typography.titleMedium)
+//                Spacer(Modifier.height(6.dp))
+//
+//                Card(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .heightIn(min = 80.dp, max = 220.dp),
+//                    elevation = CardDefaults.cardElevation(3.dp)
+//                ) {
+//                    Column(
+//                        modifier = Modifier
+//                            .padding(12.dp)
+//                            .verticalScroll(rememberScrollState())
+//                    ) {
+//                        Text(previewJson)
+//                    }
+//                }
 
                 Spacer(Modifier.height(20.dp))
 
@@ -289,7 +289,7 @@ fun SendScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        Text("Server Response", style = MaterialTheme.typography.titleMedium)
+        Text("Result", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(6.dp))
 
         Card(
@@ -297,7 +297,7 @@ fun SendScreen(
             elevation = CardDefaults.cardElevation(3.dp)
         ) {
             Text(
-                text = if (logOutput.isBlank()) "No response yet" else logOutput,
+                text = if (logOutput.isBlank()) "Not requested yet" else logOutput,
                 modifier = Modifier.padding(12.dp)
             )
         }

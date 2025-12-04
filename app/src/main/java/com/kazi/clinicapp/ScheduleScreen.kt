@@ -134,7 +134,7 @@ fun ScheduleScreen(navController: NavHostController) {
         .verticalScroll(rememberScrollState())
         .padding(16.dp)
     ) {
-        Text("Schedule Appointment Hit (One-Time)", style = MaterialTheme.typography.headlineSmall)
+        Text("Schedule Appointment", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
 
         Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(6.dp)) {

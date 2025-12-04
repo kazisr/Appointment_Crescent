@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                 selected = currentRoute == "send",
                 onClick = { navController.navigate("send") { launchSingleTop = true; restoreState = true } },
                 icon = { androidx.compose.material3.Icon(Icons.Default.Send, contentDescription = "Send") },
-                label = { androidx.compose.material3.Text("Send") }
+                label = { androidx.compose.material3.Text("Appointment Info") }
             )
 
             NavigationBarItem(
@@ -136,4 +136,5 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
 }

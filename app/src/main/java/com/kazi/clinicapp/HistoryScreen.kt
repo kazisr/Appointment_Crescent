@@ -35,7 +35,7 @@ fun HistoryScreen() {
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(12.dp)) {
-        Text("History", style = MaterialTheme.typography.headlineSmall)
+        Text("History", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(12.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
