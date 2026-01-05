@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!-- Allow cleartext ONLY for this IP -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">103.10.54.154</domain>
+    </domain-config>
+
+</network-security-config>
